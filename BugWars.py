@@ -65,6 +65,21 @@ B2002 = Bug("B2002", "Beta", 5, 10, 2, [B1005, B1006, B1007, B1008], "none")
 
 Ecaptains = [B2001, B2002]
 
+'''
+class HiveCommand():
+    def __init__(self, database, health):
+        self.database = {},
+        self.health = health,
+
+
+    def route(self, sender, reciever, message):
+        #not working
+        if sender.ID in self.database == False:
+            self.database[sender.ID] = sender.role
+        if reciever.ID in self.database == False:
+            self.database[reciever.ID] = reciever.role
+        reciever.orders = message
+'''
 def battle(fighters, defenders):
     #takes each fighter and has it attack against 1 random defender
     for a in fighters.sub:
@@ -129,39 +144,74 @@ game_round = 0
 while True:
     game_round += 1
     print("what are your orders Hive Mind")
+    print("Your Captains\n{}:{}\n{}:{}\nEnemy Captains\n{}:{}\n{}:{}".format(Ycaptains[0].ID, len(Ycaptains[0].sub), Ycaptains[1].ID, len(Ycaptains[1].sub),Ecaptains[0].ID, len(Ecaptains[0].sub), Ecaptains[1].ID, len(Ecaptains[1].sub),))
     #orders = input().lower()
     orders = "attack"
 
     if orders == "attack":
+
         print("Who do you want to attack with?")
         #attacker = input()
-        attacker = A2001
-        if attacker in Ycaptains:
-            print("who are you attacking them with?")
-            #defender = input()
-            defender = B2001
-            if defender in Ecaptains:
-                battle(attacker, defender)
-                battle(defender, attacker)
-                battle(attacker, defender)
-                battle(defender, attacker)
-                battle(attacker, defender)
-                battle(defender, attacker)
+        attacker = 'A2001'
+        if attacker == 'A2001':
+          attacker = Ycaptains[0]
+        elif attacker == 'A2002':
+          attacker = Ycaptains[1]
+        else:
+          print("please choose one of your surviving captains")
+          continue
+        print("who are you attacking them with?")
+        #defender = input()
+        defender = "B2001"
+        if defender == 'B2001':
+          defender = Ecaptains[0]
+        elif defender == 'B2002':
+          defender = Ecaptains[1]
+        else:
+          print("please choose one of the surviving opponents")
+          continue
+                
+        battle(attacker, defender)
+        battle(defender, attacker)
+        battle(attacker, defender)
+        battle(defender, attacker)
+        battle(attacker, defender)
+        battle(defender, attacker)
+
+    if orders == "flee":
+      print("you ran away you coward. Your forces where routed.\nYou lose.")
 
 
     if game_round == 5:
-        #check to see who had the most troops left
-        if len(defender.sub) > len(attacker.sub):
-            print(defender.ID, " wins!")
-        elif len(defender.sub) == len(attacker.sub):
-            print("it's a draw...")
-        else:
-            print(attacker.ID, " wins!")
+      enemy_count = 0
+      your_count = 0
+      for i in Ecaptains:
+        enemy_count +=1
+        for s in i.sub:
+          enemy_count +=1
+      for i in Ycaptains:
+        your_count +=1
+        for s in i.sub:
+          your_count +=1
 
-        print("the surviving grunts are:")
-        for i in B2001.sub:
-            print(i.ID)
-        for i in A2001.sub:
-            print(i.ID)
-        break
+      print("enemy score is {}\n your score is {}".format(enemy_count, your_count))
+        #check to see who had the most troops left
+      if enemy_count > your_count:
+          print("you where defeated")
+      elif enemy_count == your_count:
+          print("it's a draw...")
+      else:
+          print("CONGRATUALATIONS! YOU WON THIS BATTLE!")
+
+      print("your surviving troops are:")          
+      for i in A2001.sub:
+          print(i.ID)
+      for i in A2002.sub:
+          print(i.ID)
+      print("and the surviving enemy grunts are:")
+      for i in B2001.sub:
+          print(i.ID)
+      for i in B2002.sub:
+          print(i.ID)
+      break
     
